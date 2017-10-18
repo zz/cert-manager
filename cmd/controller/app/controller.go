@@ -4,23 +4,30 @@ import (
 	"fmt"
 	"os"
 	"sync"
+	"time"
 
 	"github.com/golang/glog"
 	"k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/kubernetes/scheme"
 	corev1 "k8s.io/client-go/kubernetes/typed/core/v1"
 	"k8s.io/client-go/rest"
+	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/client-go/tools/leaderelection"
 	"k8s.io/client-go/tools/leaderelection/resourcelock"
 	"k8s.io/client-go/tools/record"
 
 	"github.com/jetstack-experimental/cert-manager/cmd/controller/app/options"
+	"github.com/jetstack-experimental/cert-manager/pkg/api"
+	"github.com/jetstack-experimental/cert-manager/pkg/apis/certmanager/v1alpha1"
 	clientset "github.com/jetstack-experimental/cert-manager/pkg/client/clientset"
 	intscheme "github.com/jetstack-experimental/cert-manager/pkg/client/clientset/scheme"
+	cminformers "github.com/jetstack-experimental/cert-manager/pkg/client/informers/certmanager/v1alpha1"
 	"github.com/jetstack-experimental/cert-manager/pkg/controller"
+	"github.com/jetstack-experimental/cert-manager/pkg/initializer"
 	"github.com/jetstack-experimental/cert-manager/pkg/issuer"
 	"github.com/jetstack-experimental/cert-manager/pkg/util/kube"
 )
@@ -124,6 +131,52 @@ func buildControllerContext(opts *options.ControllerOptions) (*controller.Contex
 		Namespace:                opts.Namespace,
 		ClusterResourceNamespace: opts.ClusterResourceNamespace,
 	}, kubeCfg, nil
+}
+
+func buildInitializer(ctx *controller.Context) (*initializer.GenericInitializer, error) {
+	initializerMap := map[schema.GroupVersionKind]cache.SharedIndexInformer{}
+	issuerGvk, _, err := api.Scheme.ObjectKind(&v1alpha1.Issuer{})
+	if err != nil {
+		return nil, err
+	}
+	clusterIssuerGvk, _, err := api.Scheme.ObjectKind(&v1alpha1.ClusterIssuer{})
+	if err != nil {
+		return nil, err
+	}
+	certificateGvk, _, err := api.Scheme.ObjectKind(&v1alpha1.Certificate{})
+	if err != nil {
+		return nil, err
+	}
+	initializerMap[issuerGvk] = ctx.SharedInformerFactory.InformerFor(
+		ctx.Namespace,
+		metav1.GroupVersionKind{Group: issuerGvk.Group, Version: issuerGvk.Version, Kind: issuerGvk.Kind},
+		cminformers.NewIssuerInformer(
+			ctx.CMClient,
+			ctx.Namespace,
+			time.Second*30,
+			cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc},
+		),
+	)
+	initializerMap[clusterIssuerGvk] = ctx.SharedInformerFactory.InformerFor(
+		v1.NamespaceAll,
+		metav1.GroupVersionKind{Group: clusterIssuerGvk.Group, Version: clusterIssuerGvk.Version, Kind: clusterIssuerGvk.Kind},
+		cminformers.NewClusterIssuerInformer(
+			ctx.CMClient,
+			time.Second*30,
+			cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc},
+		),
+	)
+	initializerMap[certificateGvk] = ctx.SharedInformerFactory.InformerFor(
+		ctx.Namespace,
+		metav1.GroupVersionKind{Group: certificateGvk.Group, Version: certificateGvk.Version, Kind: certificateGvk.Kind},
+		cminformers.NewCertificateInformer(
+			ctx.CMClient,
+			ctx.Namespace,
+			time.Second*30,
+			cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc},
+		),
+	)
+	return initializer.NewGenericInitializer(ctx.CMClient.CertmanagerV1alpha1().RESTClient(), ctx.CMClient.Discovery(), api.Registry.InterfacesFor, api.Scheme, initializerMap), nil
 }
 
 func startLeaderElection(opts *options.ControllerOptions, leaderElectionClient kubernetes.Interface, recorder record.EventRecorder, run func(<-chan struct{})) {

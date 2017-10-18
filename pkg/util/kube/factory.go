@@ -29,6 +29,23 @@ type SharedInformerFactory interface {
 	Start(<-chan struct{})
 }
 
+// TODO: refactor this SharedInformerFactory to implement the below interface
+/*
+// GenericInformer is type of SharedIndexInformer which will locate and delegate to other
+// sharedInformers based on type
+type GenericInformer interface {
+	Informer() cache.SharedIndexInformer
+	Lister() cache.GenericLister
+}
+
+// SharedInformerFactory provides shared informers for resources in all known
+// API group versions.
+type SharedInformerFactory interface {
+	ForResource(resource schema.GroupVersionResource) (GenericInformer, error)
+	WaitForCacheSync(stopCh <-chan struct{}) map[reflect.Type]bool
+}
+*/
+
 var DefaultSharedInformerFactory = NewSharedInformerFactory()
 
 type sharedInformerFactory struct {
