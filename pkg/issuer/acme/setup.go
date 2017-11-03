@@ -76,7 +76,7 @@ func (a *Acme) Setup(ctx context.Context) error {
 // account with the clients private key already exists, it will attempt to look
 // up and verify the corresponding account, and will return that. If this fails
 // it will return the
-func (a *Acme) registerAccount(ctx context.Context, cl *acme.Client) (*acme.Account, error) {
+func (a *Acme) registerAccount(ctx context.Context, cl client) (*acme.Account, error) {
 	acc := &acme.Account{
 		Contact: []string{fmt.Sprintf("mailto:%s", strings.ToLower(a.issuer.GetSpec().ACME.Email))},
 	}
