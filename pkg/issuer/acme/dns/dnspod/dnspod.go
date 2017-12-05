@@ -5,6 +5,7 @@ package dnspod
 import (
 	"fmt"
 	"os"
+	"time"
 	"strings"
 
 	"github.com/decker502/dnspod-go"
