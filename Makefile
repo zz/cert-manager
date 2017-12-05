@@ -68,7 +68,6 @@ hack_verify:
 go_verify: go_fmt go_test
 
 $(CMDS):
-	go get -d -v ./...
 	CGO_ENABLED=0 GOOS=$(GOOS) GOARCH=$(GOARCH) go build -v \
 		-a -tags netgo \
 		-o $(DOCKERFILES)/${APP_NAME}-$@_$(GOOS)_$(GOARCH) \
