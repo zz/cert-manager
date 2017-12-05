@@ -145,3 +145,8 @@ func (c *DNSProvider) extractRecordName(fqdn, domain string) string {
 	}
 	return name
 }
+
+func (c *DNSProvider) Timeout() (timeout, interval time.Duration) {
+	return 120 * time.Second, 2 * time.Second
+}
+
