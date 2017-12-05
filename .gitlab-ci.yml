@@ -25,6 +25,8 @@ build:
   tags:
   - docker
   script:
+  - pwd
+  - ls
   - make build
   except:
   - master
