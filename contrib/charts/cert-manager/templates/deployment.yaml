@@ -1,0 +1,40 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      serviceAccount: {{ template "fullname" . }}
+      serviceAccountName: {{ template "fullname" . }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+{{- if .Values.ingressShim.enabled }}
+        - name: ingress-shim
+          image: "{{ .Values.ingressShim.image.repository }}:{{ default .Values.ingressShim.image.tag | default .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.ingressShim.image.pullPolicy }}
+          args:
+{{- range .Values.ingressShim.extraArgs }}
+          - {{ . }}
+{{- end }}
+          resources:
+{{ toYaml .Values.ingressShim.resources | indent 12 }}
+{{- end }}
+{{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+{{- end }}

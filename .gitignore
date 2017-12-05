@@ -1,0 +1,4 @@
+.DS_Store
+/acmesolver
+/controller
+/hack/build/dockerfiles/cert-manager-*_*_*
