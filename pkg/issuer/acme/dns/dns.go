@@ -12,7 +12,7 @@ import (
 	"github.com/jetstack/cert-manager/pkg/apis/certmanager/v1alpha1"
 	"github.com/jetstack/cert-manager/pkg/issuer/acme/dns/clouddns"
 	"github.com/jetstack/cert-manager/pkg/issuer/acme/dns/cloudflare"
-	"github.com/xenolf/lego/providers/dns/dnspod"
+	"github.com/jetstack/cert-manager/pkg/issuer/acme/dns/dnspod"
 	"github.com/jetstack/cert-manager/pkg/issuer/acme/dns/route53"
 	"github.com/jetstack/cert-manager/pkg/issuer/acme/dns/util"
 )
