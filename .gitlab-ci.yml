@@ -11,6 +11,7 @@ before_script:
   - apk --update add make docker bash curl git
   - export DOCKER_HOST=${DOCKER_PORT}
   - docker info > /dev/null
+  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   - mkdir -p "${GOPATH}/src/${PKG_PATH}" && rmdir "${GOPATH}/src/${PKG_PATH}"
   - mv "${CI_PROJECT_DIR}" "${GOPATH}/src/${PKG_PATH}"
   - cd "${GOPATH}/src/${PKG_PATH}"
@@ -25,12 +26,19 @@ build:
   tags:
   - docker
   script:
-  - pwd
-  - ls
   - make build
   except:
   - master
   - tags
+
+develop_push:
+  tags:
+  - docker
+  script:
+  - mkdir -p ~/.docker && echo "${DOCKER_AUTH_CONFIG}" > ~/.docker/config.json && chmod 600 ~/.docker/config.json
+  - make verify push IMAGE_TAGS="${CI_BUILD_REF_SLUG}-${CI_PIPELINE_ID} canary"
+  only:
+  - master
 
 master_push:
   tags:
