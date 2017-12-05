@@ -137,12 +137,12 @@ func (s *Solver) solverFor(crt *v1alpha1.Certificate, domain string) (solver, er
 			return nil, fmt.Errorf("error instantiating cloudflare challenge solver: %s", err.Error())
 		}
 	case providerConfig.DNSPod != nil:
-		apiKeySecret, err := s.secretLister.Secrets(s.resourceNamespace).Get(providerConfig.DNSPod.LoginToken.Name)
+		loginTokenSecret, err := s.secretLister.Secrets(s.resourceNamespace).Get(providerConfig.DNSPod.LoginToken.Name)
 		if err != nil {
 			return nil, fmt.Errorf("error getting DNSPod service account: %s", err.Error())
 		}
 
-		loginToken := string(apiKeySecret.Data[providerConfig.DNSPod.LoginToken.Key])
+		loginToken := string(loginTokenSecret.Data[providerConfig.DNSPod.LoginToken.Key])
 
 		impl, err = dnspod.NewDNSProviderCredentials(loginToken)
 		if err != nil {

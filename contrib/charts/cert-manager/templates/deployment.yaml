@@ -17,6 +17,8 @@ spec:
     spec:
       serviceAccount: {{ template "fullname" . }}
       serviceAccountName: {{ template "fullname" . }}
+      imagePullSecrets:
+        - name: regsecret
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
