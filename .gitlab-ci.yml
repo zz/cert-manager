@@ -36,9 +36,9 @@ develop_push:
   - docker
   script:
   - mkdir -p ~/.docker && echo "${DOCKER_AUTH_CONFIG}" > ~/.docker/config.json && chmod 600 ~/.docker/config.json
-  - make verify push IMAGE_TAGS="${CI_BUILD_REF_SLUG}-${CI_PIPELINE_ID} canary"
+  - make verify push IMAGE_TAGS="${CI_BUILD_REF_SLUG}-${CI_PIPELINE_ID}"
   only:
-  - master
+  - develop
 
 master_push:
   tags:
