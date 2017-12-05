@@ -27,7 +27,7 @@ build:
   - docker
   script:
   - make build
-  - make verify push IMAGE_TAGS="$IMAGE_PER_BRANCH"
+  - make push IMAGE_TAGS="$IMAGE_PER_BRANCH"
   except:
   - tags
 
