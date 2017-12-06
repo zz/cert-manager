@@ -26,7 +26,7 @@ build:
   tags:
   - docker
   script:
-  - make push IMAGE_TAGS="${CI_BUILD_REF_NAME}"
+  - make verify push IMAGE_TAGS="${CI_BUILD_REF_NAME}"
   except:
   - tags
 
