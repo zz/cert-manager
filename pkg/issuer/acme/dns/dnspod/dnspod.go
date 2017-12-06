@@ -149,4 +149,3 @@ func (c *DNSProvider) extractRecordName(fqdn, domain string) string {
 func (c *DNSProvider) Timeout() (timeout, interval time.Duration) {
 	return 120 * time.Second, 2 * time.Second
 }
-
