@@ -8,7 +8,7 @@ services:
 - docker:1.12-dind
 
 before_script:
-  - apk --update add make docker bash curl git
+  - apk --update add make docker bash curl git gcc
   - export DOCKER_HOST=${DOCKER_PORT}
   - docker info > /dev/null
   - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
