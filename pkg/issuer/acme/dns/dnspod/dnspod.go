@@ -5,12 +5,11 @@ package dnspod
 import (
 	"fmt"
 	"os"
-	"time"
 	"strings"
+	"time"
 
 	"github.com/decker502/dnspod-go"
 	"github.com/jetstack/cert-manager/pkg/issuer/acme/dns/util"
-//	"github.com/xenolf/lego/acme"
 )
 
 // DNSProvider is an implementation of the acme.ChallengeProvider interface.

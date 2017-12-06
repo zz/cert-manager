@@ -114,7 +114,7 @@ type ACMEIssuerDNS01Provider struct {
 	CloudDNS   *ACMEIssuerDNS01ProviderCloudDNS   `json:"clouddns,omitempty"`
 	Cloudflare *ACMEIssuerDNS01ProviderCloudflare `json:"cloudflare,omitempty"`
 	Route53    *ACMEIssuerDNS01ProviderRoute53    `json:"route53,omitempty"`
-	DNSPod	   *ACMEIssuerDNS01ProviderDNSPod	  `json:"dnspod,omitempty"`
+	DNSPod     *ACMEIssuerDNS01ProviderDNSPod     `json:"dnspod,omitempty"`
 }
 
 // ACMEIssuerDNS01ProviderCloudDNS is a structure containing the DNS
