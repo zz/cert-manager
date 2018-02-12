@@ -17,12 +17,14 @@ spec:
     spec:
       serviceAccount: {{ template "fullname" . }}
       serviceAccountName: {{ template "fullname" . }}
-      imagePullSecrets:
-        - name: regsecret
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+{{- range .Values.extraArgs }}
+          - {{ . }}
+{{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
 {{- if .Values.ingressShim.enabled }}
