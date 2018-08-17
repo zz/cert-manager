@@ -63,7 +63,7 @@ func (s *DomainsService) ListRecords(domain string, recordName string) ([]Record
 	}
 
 	if wrappedRecords.Status.Code != "1" {
-		return wrappedRecords.Records, nil, fmt.Errorf("Could not get domains: %s", wrappedRecords.Status.Message)
+		return wrappedRecords.Records, nil, fmt.Errorf("Could not get domains for list records: %s", wrappedRecords.Status.Message)
 	}
 
 	records := []Record{}
@@ -124,7 +124,7 @@ func (s *DomainsService) CreateRecord(domain string, recordAttributes Record) (R
 	}
 
 	if returnedRecord.Status.Code != "1" {
-		return returnedRecord.Record, nil, fmt.Errorf("Could not get domains: %s", returnedRecord.Status.Message)
+		return returnedRecord.Record, nil, fmt.Errorf("Could not get domains for create record: %s", returnedRecord.Status.Message)
 	}
 
 	return returnedRecord.Record, res, nil
@@ -149,7 +149,7 @@ func (s *DomainsService) GetRecord(domain string, recordID string) (Record, *Res
 	}
 
 	if returnedRecord.Status.Code != "1" {
-		return returnedRecord.Record, nil, fmt.Errorf("Could not get domains: %s", returnedRecord.Status.Message)
+		return returnedRecord.Record, nil, fmt.Errorf("Could not get domains for fetch record: %s", returnedRecord.Status.Message)
 	}
 
 	return returnedRecord.Record, res, nil
@@ -205,7 +205,7 @@ func (s *DomainsService) UpdateRecord(domain string, recordID string, recordAttr
 	}
 
 	if returnedRecord.Status.Code != "1" {
-		return returnedRecord.Record, nil, fmt.Errorf("Could not get domains: %s", returnedRecord.Status.Message)
+		return returnedRecord.Record, nil, fmt.Errorf("Could not get domains for update record: %s", returnedRecord.Status.Message)
 	}
 
 	return returnedRecord.Record, res, nil
@@ -230,7 +230,7 @@ func (s *DomainsService) DeleteRecord(domain string, recordID string) (*Response
 	}
 
 	if returnedRecord.Status.Code != "1" {
-		return nil, fmt.Errorf("Could not get domains: %s", returnedRecord.Status.Message)
+		return nil, fmt.Errorf("Could not get domains for delete record: %s", returnedRecord.Status.Message)
 	}
 
 	return res, nil
