@@ -123,7 +123,7 @@ func (s *DomainsService) CreateRecord(domain string, recordAttributes Record) (R
 		return Record{}, res, err
 	}
 
-	if returnedRecord.Status.Code == "31" {
+	if returnedRecord.Status.Code == "104" {
 		return returnedRecord.Record, res, nil
 	}
 
