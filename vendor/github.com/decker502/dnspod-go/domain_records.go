@@ -123,6 +123,11 @@ func (s *DomainsService) CreateRecord(domain string, recordAttributes Record) (R
 		return Record{}, res, err
 	}
 
+	if returnedRecord.Status.Code == "31" {
+		return nil, nil, nil
+	}
+
+
 	if returnedRecord.Status.Code != "1" {
 		return returnedRecord.Record, nil, fmt.Errorf("Could not get domains for create record: %s", returnedRecord.Status.Message)
 	}
