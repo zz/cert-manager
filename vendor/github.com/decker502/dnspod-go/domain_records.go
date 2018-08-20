@@ -77,7 +77,7 @@ func (s *DomainsService) ListRecords(domain string, recordName string) ([]Record
 // CreateRecord creates a domain record.
 //
 // dnspod API docs: https://www.dnspod.cn/docs/records.html#record-create
-func (s *DomainsService) CreateRecord(domain string, recordAttributes Record) (Record, *Response, error) {
+func (s *DomainsService) CreateRecord(domain string, recordAttributes Record) (Record, *Response, string, error) {
 	path := recordAction("Create")
 
 	payload := newPayLoad(s.client.CommonParams)
@@ -120,14 +120,14 @@ func (s *DomainsService) CreateRecord(domain string, recordAttributes Record) (R
 
 	res, err := s.client.post(path, payload, &returnedRecord)
 	if err != nil {
-		return Record{}, res, err
+		return Record{}, res, returnedRecord.Status.Code, err
 	}
 
 	if returnedRecord.Status.Code != "1" {
-		return returnedRecord.Record, returnedRecord.Status.Code, fmt.Errorf("Could not get domains for create record %s : %s", recordAttributes.Name, returnedRecord.Status.Message)
+		return returnedRecord.Record, _,  returnedRecord.Status.Code, fmt.Errorf("Could not get domains for create record %s : %s", recordAttributes.Name, returnedRecord.Status.Message)
 	}
 
-	return returnedRecord.Record, res, nil
+	return returnedRecord.Record, res, returnedRecord.Status.Code, nil
 }
 
 // GetRecord fetches the domain record.

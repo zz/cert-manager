@@ -46,7 +46,7 @@ func (c *DNSProvider) Present(domain, token, keyAuth string) error {
 	}
 
 	recordAttributes := c.newTxtRecord(zoneName, fqdn, value, ttl)
-	_, statusCode, err = c.client.Domains.CreateRecord(zoneID, *recordAttributes)
+	_, _, statusCode, err = c.client.Domains.CreateRecord(zoneID, *recordAttributes)
 
 	if statusCode == "104" {
 		fmt.Errorf("Delete ACME TXT record: %s", domain)
