@@ -56,7 +56,10 @@ func (c *DNSProvider) Present(domain, token, keyAuth string) error {
 	if statusCode == "104" || statusCode == "25" {
 		log.Printf("!! Delete ACME TXT record: %s", domain)
 		time.Sleep(5 * time.Second)
-		c.CleanUp(domain, token, keyAuth)
+		cErr := c.CleanUp(domain, token, keyAuth)
+		if cErr != nil {
+			log.Printf("** Cleanup DNSPod record failed: %v", cErr)
+		}
 	}
 
 	if err != nil {
@@ -79,6 +82,7 @@ func (c *DNSProvider) CleanUp(domain, token, keyAuth string) error {
 	if err != nil {
 		return err
 	}
+	log.Printf("-- Try to delete DNSPod domain %s TXT records", domain)
 
 	for _, rec := range records {
 		log.Printf("!!! Delete DNSPod record ID: %s for domain %s", rec.ID, rec.Name)
