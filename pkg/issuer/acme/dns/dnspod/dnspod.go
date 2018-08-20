@@ -81,6 +81,7 @@ func (c *DNSProvider) CleanUp(domain, token, keyAuth string) error {
 	}
 
 	for _, rec := range records {
+		log.Printf("!!! Delete DNSPod record ID: %s for domain %s", rec.ID, rec.Name)
 		_, err := c.client.Domains.DeleteRecord(zoneID, rec.ID)
 		if err != nil {
 			return err
