@@ -53,8 +53,8 @@ func (c *DNSProvider) Present(domain, token, keyAuth string) error {
 
 	log.Printf("!! CreateRecord status code is: %s", statusCode)
 
-	if statusCode == "104" {
-		fmt.Printf("!! Delete ACME TXT record: %s", domain)
+	if statusCode == "104" || statusCode == "25" {
+		log.Printf("!! Delete ACME TXT record: %s", domain)
 		time.Sleep(3 * time.Second)
 		//CleanUp(domain, token, keyAuth)
 		//return Present(domain, token, keyAuth)
