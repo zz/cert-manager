@@ -147,6 +147,7 @@ func (c *DNSProvider) findTxtRecords(domain, fqdn string) ([]dnspod.Record, erro
 	recordName := c.extractRecordName(fqdn, zoneName)
 
 	for _, record := range result {
+		log.Printf("-- findTxtRecord extractRecordName: %s, listRecord.Name: %s", recordName, record.Name)
 		if record.Name == recordName {
 			records = append(records, record)
 		}
