@@ -4,6 +4,7 @@ package dnspod
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"strings"
 	"time"
@@ -50,7 +51,7 @@ func (c *DNSProvider) Present(domain, token, keyAuth string) error {
 	recordAttributes := c.newTxtRecord(zoneName, fqdn, value, ttl)
 	_, _, statusCode, err = c.client.Domains.CreateRecord(zoneID, *recordAttributes)
 
-	fmt.Printf("!! CreateRecord status code is: %s", statusCode)
+	log.Printf("!! CreateRecord status code is: %s", statusCode)
 
 	if statusCode == "104" {
 		fmt.Printf("!! Delete ACME TXT record: %s", domain)
