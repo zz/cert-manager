@@ -175,10 +175,10 @@ func (a *Acme) authorize(ctx context.Context, cl *acme.Client, crt *v1alpha1.Cer
 	}
 
 	a.recorder.Eventf(crt, v1.EventTypeNormal, reasonSelfCheck, messageSelfCheck, auth.domain)
-	//	err = solver.Wait(ctx, crt, auth.domain, token, key)
-	//	if err != nil {
-	//		return nil, fmt.Errorf("error waiting for key to be available for domain %q: %s", auth.domain, err.Error())
-	//	}
+	err = solver.Wait(ctx, crt, auth.domain, token, key)
+	if err != nil {
+		return nil, fmt.Errorf("error waiting for key to be available for domain %q: %s", auth.domain, err.Error())
+	}
 
 	challenge, err = cl.Accept(ctx, challenge)
 	if err != nil {

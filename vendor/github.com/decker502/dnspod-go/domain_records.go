@@ -128,7 +128,7 @@ func (s *DomainsService) CreateRecord(domain string, recordAttributes Record) (R
 	}
 
 	if returnedRecord.Status.Code != "1" {
-		return returnedRecord.Record, nil, fmt.Errorf("Could not get domains for create record: %s", returnedRecord.Status.Message)
+		return returnedRecord.Record, nil, fmt.Errorf("Could not get domains for create record %s : %s", recordAttributes.Name, returnedRecord.Status.Message)
 	}
 
 	return returnedRecord.Record, res, nil
