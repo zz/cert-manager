@@ -51,7 +51,7 @@ func (c *DNSProvider) Present(domain, token, keyAuth string) error {
 	_, _, statusCode, err = c.client.Domains.CreateRecord(zoneID, *recordAttributes)
 
 	if statusCode == "104" {
-		fmt.Errorf("!! Delete ACME TXT record: %s", domain)
+		fmt.Printf("!! Delete ACME TXT record: %s", domain)
 		time.Sleep(3 * time.Second)
 		//CleanUp(domain, token, keyAuth)
 		//return Present(domain, token, keyAuth)
