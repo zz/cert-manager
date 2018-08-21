@@ -146,7 +146,6 @@ func (c *DNSProvider) findTxtRecords(domain, fqdn string) ([]dnspod.Record, erro
 		return records, fmt.Errorf("dnspod API call has failed: %v", err)
 	}
 
-
 	for _, record := range result {
 		log.Printf("-- findTxtRecord extractRecordName: %s, listRecord.Name: %s", recordName, record.Name)
 		if record.Name == recordName {
